@@ -1,0 +1,11 @@
+zerops:
+  - setup: app
+    build:
+      base: php@8.4
+      deployFiles: ./
+    run:
+      base: php-nginx@8.4
+      ports:
+        - port: 80
+          httpSupport: true
+      documentRoot: public
