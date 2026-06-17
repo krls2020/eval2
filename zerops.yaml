@@ -1,0 +1,20 @@
+zerops:
+  - setup: app
+    build:
+      base: bun@1.3
+      # No dependencies — the app uses only Bun built-ins (Bun.serve, fetch).
+      # Deploy the full source tree; nothing to compile or install.
+      deployFiles:
+        - ./
+    run:
+      base: bun@1.3
+      ports:
+        - port: 3000
+          httpSupport: true
+      envVariables:
+        PORT: "3000"
+      start: bun src/index.ts
+      healthCheck:
+        httpGet:
+          port: 3000
+          path: /status
