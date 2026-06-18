@@ -1,0 +1,26 @@
+name: Deploy to Zerops Production
+
+# Tag-trigger CD: pushing a vX.Y.Z tag builds and deploys to the
+# production 'app' service in the zcp-eval-prod project.
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install zcli
+        run: |
+          curl -sSL https://zerops.io/zcli/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Deploy to production
+        run: |
+          zcli login "$ZEROPS_TOKEN"
+          zcli push --service-id "kMfzCBglQ1OF6E6lEXSTdg" --setup prod
+        env:
+          ZEROPS_TOKEN: ${{ secrets.ZEROPS_TOKEN_PROD }}
