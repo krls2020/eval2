@@ -14,6 +14,6 @@ jobs:
       - name: Deploy app to production
         run: |
           zcli login "$ZEROPS_TOKEN_PROD"
-          zcli push --service-id "DQAKJAmUTB6QgfqkmcUnew" --setup "prod"
+          zcli push --service-id "Cwze4bB2R62mzADQlQ7UYQ" --setup "prod"
         env:
           ZEROPS_TOKEN_PROD: ${{ secrets.ZEROPS_TOKEN_PROD }}
