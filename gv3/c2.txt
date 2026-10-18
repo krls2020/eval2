@@ -17,7 +17,7 @@ line 16 of the c file
 line 17 of the c file
 line 18 of the c file
 line 19 of the c file
-line 20 of the c file
+LINE 20 of the c file
 line 21 of the c file
 line 22 of the c file
 line 23 of the c file
