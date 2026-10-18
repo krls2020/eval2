@@ -7,7 +7,7 @@ line 6 of the c file
 line 7 of the c file
 line 8 of the c file
 line 9 of the c file
-line 10 of the c file
+LINE 10 of the c file
 line 11 of the c file
 line 12 of the c file
 line 13 of the c file
