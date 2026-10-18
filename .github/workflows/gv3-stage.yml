@@ -1,0 +1,13 @@
+name: gv3-stage
+run-name: gv3-stage ${{ inputs.stage_url }}
+on:
+  workflow_dispatch:
+    inputs:
+      stage_url:
+        description: stage URL
+        required: true
+jobs:
+  stage-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "testing ${{ inputs.stage_url }} at $GITHUB_SHA"
