@@ -1,0 +1,13 @@
+name: CI
+on:
+  push:
+    branches: [main, mate/stage]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: check
+        run: |
+          if [ -e CI_FAIL ]; then echo "CI_FAIL present"; exit 1; fi
+          sleep 20
