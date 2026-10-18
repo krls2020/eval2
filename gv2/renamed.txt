@@ -1,6 +1,6 @@
 probe line 1 — gv2 rename-detection fixture
 probe line 2 — gv2 rename-detection fixture
-probe line 3 — gv2 rename-detection fixture
+probe line 3 — edited on branch B after rename
 probe line 4 — gv2 rename-detection fixture
 probe line 5 — gv2 rename-detection fixture
 probe line 6 — gv2 rename-detection fixture
