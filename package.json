@@ -1,20 +1,16 @@
 {
-  "name": "nodejs-hello-world",
-  "version": "1.0.0",
+  "name": "turbo-mono",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "npm@10.9.2",
   "scripts": {
-    "build": "tsc",
-    "start:prod": "node dist/index.js",
-    "dev": "ts-node src/index.ts"
-  },
-  "dependencies": {
-    "express": "^4.21.2",
-    "pg": "^8.13.1"
+    "build": "turbo run build",
+    "dev": "turbo run dev"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.0.0",
-    "@types/pg": "^8.11.11",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "turbo": "^2.5.0"
   }
 }
