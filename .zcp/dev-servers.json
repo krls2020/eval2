@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "servers": [
+    {
+      "name": "api",
+      "port": 4000,
+      "command": "npm run dev",
+      "cwd": "apps/api"
+    },
+    {
+      "name": "web",
+      "port": 3000,
+      "command": "npm run dev",
+      "cwd": "apps/web"
+    }
+  ]
+}

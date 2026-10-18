@@ -1,0 +1,55 @@
+zerops:
+  # Dev service: the whole monorepo, both apps run as dev servers side by side.
+  - setup: dev
+    build:
+      base: ubuntu/nodejs@22
+      deployFiles: [.]
+    run:
+      base: ubuntu/nodejs@22
+      ports:
+        - port: 3000
+          httpSupport: true
+        - port: 4000
+          httpSupport: true
+      envVariables:
+        API_URL: ${API_DEV_URL}
+      start: zcp-devsup run
+      prepareCommands:
+        - sudo sh -c 'u=https://storage-prg1.zerops.io/4gnfa-devbins/zcp/1f4677b2e-a8535282/zcp-devsup-linux-amd64; f=/usr/local/bin/zcp-devsup; if command -v curl >/dev/null; then curl -fsSL "$u" -o "$f"; else wget -qO "$f" "$u"; fi && chmod 0755 "$f"'
+
+  # apps/web
+  - setup: web
+    build:
+      base: ubuntu/nodejs@22
+      buildCommands:
+        - npm install --no-audit --no-fund
+        - npx turbo run build --filter=web
+      deployFiles:
+        - ./apps/web/dist/~
+    run:
+      base: ubuntu/nodejs@22
+      ports:
+        - port: 3000
+          httpSupport: true
+      envVariables:
+        NODE_ENV: production
+        API_URL: ${API_PUBLIC_URL}
+      start: node server.js
+
+  # apps/api
+  - setup: api
+    build:
+      base: ubuntu/nodejs@22
+      buildCommands:
+        - npm install --no-audit --no-fund
+        - npx turbo run build --filter=api
+      deployFiles:
+        - ./apps/api/dist/~
+    run:
+      base: ubuntu/nodejs@22
+      ports:
+        - port: 4000
+          httpSupport: true
+      envVariables:
+        NODE_ENV: production
+      start: node server.js
