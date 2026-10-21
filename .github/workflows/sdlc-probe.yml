@@ -1,0 +1,50 @@
+name: sdlc-probe
+run-name: ${{ github.event_name == 'workflow_dispatch' && format('sdlc-probe test {0}', inputs.sha) || 'sdlc-probe status' }}
+on:
+  pull_request:
+    types: [synchronize]
+  workflow_dispatch:
+    inputs:
+      sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+  statuses: write
+jobs:
+  forge:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/$GITHUB_REPOSITORY/statuses/${{ github.event.pull_request.head.sha }}" -f state=success -f context=mate/gate -f description="written with GITHUB_TOKEN"
+  test:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.sha }}
+      - id: t
+        run: |
+          echo "checked out $(git rev-parse HEAD), dispatched on $GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "${{ inputs.sha }}"
+          grep -q sdlc-verify-H sdlc-probe/marker.txt
+      - if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/$GITHUB_REPOSITORY/statuses/${{ inputs.sha }}" -f state=${{ steps.t.outcome == 'success' && 'success' || 'failure' }} -f context=mate/test -f description="tested $(git rev-parse HEAD) on run $GITHUB_RUN_ID" -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+  nostatuses:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/${{ inputs.sha }}" -d '{"state":"success","context":"mate/nostatuses"}')
+          echo "status write without statuses permission: HTTP $code"
+          test "$code" = 403
+# a2
