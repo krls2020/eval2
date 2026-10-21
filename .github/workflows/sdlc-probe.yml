@@ -47,4 +47,18 @@ jobs:
           code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/${{ inputs.sha }}" -d '{"state":"success","context":"mate/nostatuses"}')
           echo "status write without statuses permission: HTTP $code"
           test "$code" = 403
-# a2
+  rules:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          id=$(gh api "repos/$GITHUB_REPOSITORY/rulesets" --jq '.[0].id')
+          code=$(curl -s -o r.json -w '%{http_code}' -H "Authorization: Bearer $GH_TOKEN" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/rulesets/$id")
+          b=$(jq -c '{has: has("bypass_actors"), n: ((.bypass_actors // []) | length), cub: .current_user_can_bypass}' r.json)
+          echo "GITHUB_TOKEN GET ruleset $id: $code $b"
+          gh api -X POST "repos/$GITHUB_REPOSITORY/statuses/${{ inputs.sha }}" -f state=success -f context=probe/rules -f description="GITHUB_TOKEN GET ruleset: $code $b"
