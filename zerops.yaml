@@ -1,0 +1,30 @@
+zerops:
+  - setup: dev
+    build:
+      base: ubuntu/nodejs@24
+      deployFiles: [ . ]
+    run:
+      base: ubuntu/nodejs@24
+      ports:
+        - port: 3000
+          httpSupport: true
+      start: zsc noop --silent
+
+  - setup: prod
+    build:
+      base: ubuntu/nodejs@24
+      buildCommands:
+        - node --check index.js
+      deployFiles:
+        - index.js
+    deploy:
+      readinessCheck:
+        httpGet:
+          port: 3000
+          path: /
+    run:
+      base: ubuntu/nodejs@24
+      ports:
+        - port: 3000
+          httpSupport: true
+      start: node index.js
