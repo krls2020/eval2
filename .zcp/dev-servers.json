@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "servers": [
+    {
+      "name": "web",
+      "port": 3000,
+      "command": "node index.js",
+      "cwd": "."
+    }
+  ]
+}
