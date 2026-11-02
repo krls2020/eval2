@@ -8,7 +8,9 @@ zerops:
       ports:
         - port: 3000
           httpSupport: true
-      start: zsc noop --silent
+      start: zcp-devsup run
+      prepareCommands:
+        - sudo sh -c 'u=https://github.com/zeropsio/zcp/releases/download/v9.236.0/zcp-devsup-linux-amd64; f=/usr/local/bin/zcp-devsup; if command -v curl >/dev/null; then curl -fsSL "$u" -o "$f"; else wget -qO "$f" "$u"; fi && chmod 0755 "$f"'
 
   - setup: prod
     build:
