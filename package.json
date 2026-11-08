@@ -1,16 +1,11 @@
 {
-  "name": "turbo-mono",
+  "name": "hq-go-cutover",
+  "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "packageManager": "npm@10.9.2",
+  "type": "module",
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev"
-  },
-  "devDependencies": {
-    "turbo": "^2.5.0"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node --check server.js"
   }
 }
