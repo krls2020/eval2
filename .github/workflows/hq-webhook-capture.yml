@@ -1,0 +1,7 @@
+name: hq-webhook-capture
+on: [push, pull_request]
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo captured
