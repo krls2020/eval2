@@ -1,0 +1,35 @@
+zerops:
+  - setup: dev
+    build:
+      base: ubuntu/nodejs@26
+      deployFiles: [ . ]
+    run:
+      base: ubuntu/nodejs@26
+      ports:
+        - port: 3000
+          httpSupport: true
+      envVariables:
+        PORT: 3000
+      start: zsc noop --silent
+  - setup: prod
+    build:
+      base: ubuntu/nodejs@26
+      buildCommands:
+        - npm run check
+      deployFiles:
+        - server.js
+        - package.json
+    deploy:
+      readinessCheck:
+        httpGet:
+          port: 3000
+          path: /health
+    run:
+      base: ubuntu/nodejs@26
+      ports:
+        - port: 3000
+          httpSupport: true
+      envVariables:
+        NODE_ENV: production
+        PORT: 3000
+      start: npm start
